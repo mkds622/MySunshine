@@ -15,6 +15,7 @@
  */
 package com.meet.mysunshine.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
@@ -113,24 +114,38 @@ public class TestDb extends AndroidTestCase {
         where you can uncomment out the "createNorthPoleLocationValues" function.  You can
         also make use of the ValidateCurrentRecord function from within TestUtilities.
     */
-    public void testLocationTable() {
+    public long testLocationTable() {
         // First step: Get reference to writable database
+        SQLiteDatabase db=new WeatherDbHelper(this.getContext()).getWritableDatabase();
+        assertEquals(true,db.isOpen());
 
         // Create ContentValues of what you want to insert
         // (you can use the createNorthPoleLocationValues if you wish)
+        ContentValues testValues=new ContentValues();
+        testValues.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,"12345");
+        testValues.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME,"ABC");
+        testValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT,1.234);
+        testValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG,4.567);
 
         // Insert ContentValues into database and get a row ID back
+        long locationrowid=db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, testValues);
+        assertTrue("Error: Failure to insert North Pole Location Values", locationrowid != -1);
 
         // Query the database and receive a Cursor back
-
+        Cursor cursor=db.query(WeatherContract.LocationEntry.TABLE_NAME,null,null,null,null,null,null);
         // Move the cursor to a valid database row
-
+        assertTrue("Error: No rows returned from Location Table",cursor.moveToFirst());
         // Validate data in resulting Cursor with the original ContentValues
+        TestUtilities.validateCurrentRecord("Error: Location Query Validation Failed",
+                cursor,testValues);
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
         // query if you like)
-
+        assertTrue("Error:More than one record obtained from location query",cursor.moveToNext());
         // Finally, close the cursor and database
+        cursor.close();
+        db.close();
 
+        return locationrowid;
     }
 
     /*
