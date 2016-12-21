@@ -30,7 +30,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 2;
 
-    public static final String DATABASE_NAME = "weather.db";
+    public static final String DATABASE_NAME = "weather1.db";
 
     public WeatherDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -74,8 +74,8 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
                 LocationEntry.COLUMN_LOCATION_SETTING + " TEXT UNIQUE NOT NULL, " +
                 LocationEntry.COLUMN_CITY_NAME + " TEXT NOT NULL, " +
                 LocationEntry.COLUMN_COORD_LAT + " REAL NOT NULL, " +
-                LocationEntry.COLUMN_COORD_LONG + " REAL NOT NULL, " +
-                " );";
+                LocationEntry.COLUMN_COORD_LONG + " REAL NOT NULL" +
+                ");";
 
         sqLiteDatabase.execSQL(SQL_CREATE_WEATHER_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_LOCATION_TABLE);
